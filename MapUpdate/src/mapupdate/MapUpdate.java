@@ -13,7 +13,7 @@ import java.awt.*;
 import java.io.*;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
-
+import java.util.*;
 
 public class MapUpdate {
 
@@ -35,17 +35,53 @@ public class MapUpdate {
 class Updater {
     
     BufferedImage map = null;
-    
+    HashMap hash;
     
     // UPDATER CONSTRUCTOR
     
     public Updater(String ... args) {
+        
+        hash = new <String, Polygon>HashMap();
+        populateHashmap();
         
         map = loadMapImage();
         drawBuildings(args);
         saveMap();
         
     }
+    
+    // POPULATE HASHMAP
+    // Creates a total listing of the buildings and their positions within the image.
+    private void populateHashmap() {
+       
+        Polygon poly;
+        
+        // #26
+        poly = new Polygon();
+        poly.addPoint(109,113);
+        poly.addPoint(152,113);
+        poly.addPoint(152,134);
+        poly.addPoint(109,134);
+        hash.put("26", poly);
+        
+        // #25
+        poly = new Polygon();
+        poly.addPoint(130,137);
+        poly.addPoint(150,137);
+        poly.addPoint(150,170);
+        poly.addPoint(130,170);
+        hash.put("25", poly);
+        
+        // #24
+        poly = new Polygon();
+        poly.addPoint(180,136);
+        poly.addPoint(200,136);
+        poly.addPoint(200,166);
+        poly.addPoint(180,166);
+        hash.put("24", poly);
+        
+    }
+    
     
     // LOAD MAP IMAGE
     // Loads the "blank" map
@@ -79,11 +115,28 @@ class Updater {
     // Accepts the list of available buildings and draws them to the map
     private void drawBuildings(String ... args) {
         
-        // Testing...
-        for (String bldg: args) {
-            System.out.println(bldg);
-        }
+        // Remove all of the "occupied" buildings from the hash map
+        System.out.println("TOTAL BUILDINGS: " + hash.size());
         
+        for (String bldg: args) {
+            System.out.println("removing " + bldg);
+            hash.remove(bldg);
+        }
+
+        // Setup the graphics context
+        Graphics2D g2 = map.createGraphics();
+        g2.setComposite(AlphaComposite.SrcOver.derive(0.3f));
+        g2.setColor(Color.ORANGE);
+        
+        // Begin drawing over the sequence of occupied buildings
+        Polygon p;
+        Set<Map.Entry<String, Polygon>> set = hash.entrySet();
+
+        for (Map.Entry<String, Polygon> me: set) {
+            System.out.println("drawing " + me.getKey());
+            p = (Polygon)me.getValue();
+            g2.fillPolygon(p);
+        }     
     }
     
     
@@ -102,7 +155,7 @@ class Updater {
             //OutputStream out = new FileOutputStream(new File("images/map.png"));
             File out = new File("map.png");
             ImageIO.write(renderedMap, "png", out);
-            System.out.println("...map.png successfully written!");
+            System.out.println("SUCCESS!");
         }
         catch (IOException e) {
             System.out.println("ERROR saveMap(): " + e.toString());
