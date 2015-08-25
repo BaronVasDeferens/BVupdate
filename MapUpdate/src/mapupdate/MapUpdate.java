@@ -41,9 +41,9 @@ class Updater {
     
     public Updater(String ... args) {
         
-        //map = loadMapImage();
+        map = loadMapImage();
         drawBuildings(args);
-        //saveMap();
+        saveMap();
         
     }
     
@@ -54,7 +54,7 @@ class Updater {
         BufferedImage return_image = null;
         InputStream fin = null;
         
-        fin = getClass().getResourceAsStream("blankmap.png");
+        fin = getClass().getResourceAsStream("images/blankmap.png");
             
         if (fin == null)
         {
@@ -99,13 +99,13 @@ class Updater {
         RenderedImage renderedMap = (RenderedImage)map;
         
         try {
-            OutputStream out = new FileOutputStream(new File("map.png"));
+            //OutputStream out = new FileOutputStream(new File("images/map.png"));
+            File out = new File("map.png");
             ImageIO.write(renderedMap, "png", out);
-            out.close();
             System.out.println("...map.png successfully written!");
         }
         catch (IOException e) {
-            System.out.println(e.toString());
+            System.out.println("ERROR saveMap(): " + e.toString());
         }
         
     }
