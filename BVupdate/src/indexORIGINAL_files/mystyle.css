@@ -1,0 +1,157 @@
+/* mystyle.css */
+/*MODIFIED 01/30/12*/
+
+body 
+{
+	background-color:#f3b044;
+	font-family: "Arial";
+}
+
+p
+{	font-family: "Arial";
+	color: black;
+}
+
+h1
+{
+	font-family: "Arial", sans-serif;
+	color: black;
+}
+
+h2
+{
+	font-family: "Arial", sans-serif;
+	font-size: 20pt;
+	color:black;
+}
+
+h3
+{
+	font-family: "Arial";
+	color:white;
+}
+
+ul
+{
+	font-family: "Arial";
+	font-size: 10pt;
+	color: black;
+}
+
+
+p
+{
+	font-family:"Arial", sans-serif;
+	color: black;
+	font-size: 10pt;
+}
+
+
+table
+{
+	font-family: "Arial";
+	font-size: 12px;
+}
+
+.picture
+{
+	margin: 5px;
+	border: solid black 5px;
+	float:left;
+}
+
+#header_table tr
+{
+	border: solid black 1px;
+}
+
+#contact_table td
+{
+	border: 1px;
+	background-color:#E68E03;
+	padding: 15px;
+}
+
+#avail_table th
+{
+	padding: 10px;
+	border: solid black 3px;
+	font-weight: bold;
+	background-color: #E68E03;
+	
+}
+
+#avail_table td
+{
+	padding: 5px;
+	border: solid black 1px;
+	background-color: white;
+}
+
+#spec_table
+{
+	margin: 10px;
+	padding: 10px;
+	float:left;
+	width: 300px;
+}
+
+.spec_col
+{
+	font-weight: bold;
+	padding: 5px;
+	border: solid black 3px;
+	background-color: #E68E03;
+}
+
+.spec_row
+{
+	padding: 10px;
+	border: solid black 1px;
+	background-color: white;
+}
+
+#logo_space 
+{
+	border: solid black 6px;
+	-moz-border-radius: 15px;
+	background-color:#E68E03;
+	padding: 10px;
+	width: auto;
+	height: auto;
+	top: 0;
+	left: 10em;	
+}
+
+#main
+{
+	padding: 10px;
+
+}
+
+#map
+{
+	border:0px;
+	float: left;
+
+}
+
+#avail_table
+{
+	padding: 10px;
+	border: 0px;
+	background-color: #f3b044;
+}
+
+#features
+{
+	border: solid black 6px;
+	-moz-border-radius: 15px;
+	background-color:#E68E03;
+	padding: 10px;
+	width: auto;
+	height: auto;
+	top: 0;
+	left: 10em;
+	clear: both;
+}
