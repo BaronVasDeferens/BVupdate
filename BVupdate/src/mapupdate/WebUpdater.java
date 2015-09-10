@@ -97,6 +97,7 @@ public class WebUpdater {
             String input = in.readLine();
             while (input != null) {
                 index.print(input);
+                index.print("\n");
                 input = in.readLine();
             }
             
@@ -115,37 +116,43 @@ public class WebUpdater {
     // Retruns <h3>AVAILABILITIES FOR MONTH 201X</h3>
     private String updateAvailableMonth() {
         String newTime = (LocalDateTime.now().getMonth() + " " +  LocalDateTime.now().getYear());
-        String availMonth = "<h3>AVAILABILITIES FOR " + newTime + "</h3>";
+        String availMonth = "<h3>AVAILABILITIES FOR " + newTime + "</h3>\n";
         return availMonth;
          
     }
     
     // GENERATE CLICK MAP
-    // Using data from the MApUpdate, create a new clickmap and pipe
+    // Using data from the MapUpdate, create a new clickmap and pipe
     private void generateClickMap() {
         
         // Inject the next bit of HTML
         //index.print("<img src=\"http://www.bunnsvillage.com/images/map.png\" width=\"444\" class=\"picture\" usemap=\"#clickmap\"> \n<map name=\"clickmap\">");
-        index.print("<img src=\"map.png\" width=\"444\" class=\"picture\" usemap=\"#clickmap\"> \n<map name=\"clickmap\">");
+        index.print("<img src=\"map.png\" width=\"444\" class=\"picture\" usemap=\"#clickmap\"> \n<map name=\"clickmap\">\n");
         
 
         Set<Map.Entry<String, Building>> set = avails.entrySet();
         Polygon p;
+        Building b;
         int xVals[], yVals[];
         String coordString = "";
         
+        // Iterate through the buildings. 
+        // If an erronious building is enetered, do not generater clickmap table entry for it
         for (Map.Entry<String, Building> me: set) {
 
-            index.write("<area shape=\"poly\" coords=\"");
+            b = me.getValue();
+            
+            if (b == null)
+                continue;
             
             // Extract a polygon and it's list posy x and y points
-            p = (Polygon)me.getValue().myPoly;
-            
+            p = (Polygon)b.myPoly;
             if (p == null)
                 continue;
             
             xVals = p.xpoints;
             yVals = p.ypoints;
+            index.write("<area shape=\"poly\" coords=\"");
             
             // Evaluate the x/y pairs as integers, then write to string (adding a comma after all except the last)
             for (int i = 0; i < p.npoints; i++) {
@@ -163,15 +170,45 @@ public class WebUpdater {
         }
         
         // cap off the map tag
-        index.write("</map>");
+        index.write("</map>\n");
         
     }
     
     
     // GENRATE AVAIL TABLE
-    // Using the remainder of the building data, create the table and feature list...
+    // Using the remainder of the building data, create the table and feature list
     private void generateAvailTable() {
         
+        Set<Map.Entry<String, Building>> set = avails.entrySet();
+        Building b;
+        
+        loadAndAddContentFromFile("tablesetup.txt");
+        
+        if (set.size() == 0) {
+            // Say NO AVAIALABILITIES?
+            return;
+        }
+        
+        for (Map.Entry<String, Building> me: set) {
+            
+            b = me.getValue();
+            
+            if (b == null)
+                continue;
+            
+            index.println("<tr align=\"center\">");
+            
+            index.println("<td width=\"100\">" + "#" + b.name + "</td>");
+            index.println("<td width=\"100\">" + b.address + "</td>");
+            index.println("<td width=\"100\">" + b.sqFeet + "</td>");
+            index.println("<td width=\"100\">" + "click for details");
+            index.println("<td width=\"100\">" + "$" + b.monthlyRate + "</td>");
+            index.println("<td width=\"100\">" + "<a href = \"http://www.bunnsvillage.com/" + b.name + ".html\">NOW</a></td>");
+            index.println("</tr>\n");
+            
+        }
+        
+        index.println("</tbody>\n </table>");
         
     }
     

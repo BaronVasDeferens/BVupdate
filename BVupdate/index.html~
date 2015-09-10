@@ -28,32 +28,14 @@
 
 
 
-<h3>AVAILABILITIES FOR SEPTEMBER 2015</h3>
-<img src="map.png" width="444" class="picture" usemap="#clickmap"> 
+<h3>AVAILABILITIES FOR AUGUST 2015</h3>
+<img src="map.png" width="444" id="picture" usemap="#clickmap"> 
 <map name="clickmap">
 <area shape="poly" coords="220,401,240,409,232,427,211,418" href="http://www.bunnsvillage.com/1A.html" alt="#1A">
+<area shape="poly" coords="239,343,260,350,247,384,226,375" href="http://www.bunnsvillage.com/2.html" alt="#2">
+<area shape="poly" coords="172,374,191,369,201,402,182,407" href="http://www.bunnsvillage.com/3.html" alt="#3">
+<area shape="poly" coords="155,319,176,313,183,337,162,343" href="http://www.bunnsvillage.com/4B.html" alt="#4B">
 </map>
-<table id="avail_table">
-<tbody>
-<tr>
-<th width="100"><b>Unit</b></th>
-<th width="100"><b>Address</b></th>
-<th width="100"><b>Size</b></th>
-<th width="100"><b>Features</b>
-</th><th width="100"><b>Rate</b></th>
-<th width="100"><b>Availability</b></th>
-</tr>
-<tr align="center">
-<td width="100">#1A</td>
-<td width="100">8083 NW Hwy 99</td>
-<td width="100">1920</td>
-<td width="100">click for details
-<td width="100">$1450</td>
-<td width="100"><a href = "http://www.bunnsvillage.com/1A.html">NOW</a></td>
-</tr>
-
-</tbody>
- </table>
 <h3>UPDATE: A variety of 1200-2400 sq. ft. units will be available for rent in the months ahead. Check back, call or email us for details!</h3>
 
 </div>

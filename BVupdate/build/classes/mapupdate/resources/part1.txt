@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- saved from url=(0028)http://www.bunnsvillage.com/ -->
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<link rel="stylesheet" type="text/css" href="http://www.bunnsvillage.com/mystyle.css">
+<link rel="stylesheet" type="text/css" href="mystyle.css">
 <title>Bunns Village -  Quality Commercial and Industrial Buildings For Lease in McMinnville, Oregon</title>
 </head>
 
@@ -25,3 +25,5 @@
 
 
 <div id="main">
+
+
