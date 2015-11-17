@@ -10,8 +10,10 @@ following format: mapupdate 11 13 21A 17B
 The MapUpdater is up first, generating the lists of occupied and available units.
 The WebUpdater uses the data furnished by MapUpdater to generate a new website
  
+OUTPUT: index.html and map.png
+
  */
-package mapupdate;
+package bvupdate;
 
 
 public class BVupdate {

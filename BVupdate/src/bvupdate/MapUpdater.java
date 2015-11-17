@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mapupdate;
+package bvupdate;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -186,6 +186,7 @@ public class MapUpdater {
         b.setRestrooms(1, 0);
         b.setOptions(true, false);
         b.setDoors(1, "two 10'x10'");
+        b.setRate(1550);
         occupied.put("18".hashCode(), b);
         
         // #17
@@ -373,7 +374,7 @@ public class MapUpdater {
         poly.addPoint(240,409); // 1
         poly.addPoint(232,427);
         poly.addPoint(211,418);
-        b = new Building("1A","8083 NW Hwy 99",poly);
+        b = new Building("1A","8081 NW Hwy 99",poly);
         b.setSize(40, 48, 14);
         b.setRestrooms(1,1);
         b.setRate(1450);
@@ -387,7 +388,7 @@ public class MapUpdater {
         poly.addPoint(263,420);
         poly.addPoint(255,437);
         poly.addPoint(232,427);
-        b = new Building("1B","",poly);
+        b = new Building("1B","8083 NW Hwy 99",poly);
 
         occupied.put("1B".hashCode(), b);
            
