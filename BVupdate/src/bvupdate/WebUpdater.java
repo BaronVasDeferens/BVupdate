@@ -184,33 +184,31 @@ public class WebUpdater {
         
         loadAndAddContentFromFile("tablesetup.txt");
         
-        if (set.size() == 0) {
-            // Say NO AVAIALABILITIES?
-            return;
-        }
+        if (set.size() > 0)
+        {
         
-        for (Map.Entry<String, Building> me: set) {
-            
-            b = me.getValue();
-            
-            if (b == null)
-                continue;
-            
-            index.println("<tr align=\"center\">");
-            
-            index.println("<td width=\"100\">" + "#" + b.name + "</td>");
-            index.println("<td width=\"100\">" + b.address + "</td>");
-            index.println("<td width=\"100\">" + Integer.toString(b.length) +"x"+Integer.toString(b.width) + "x" + Integer.toString(b.height) + "</td>");
-            index.println("<td width=\"100\">" + "click for details");
-            index.println("<td width=\"100\">" + "$" + b.monthlyRate + "</td>");
-            index.println("<td width=\"100\">" + "<a href = \"http://www.bunnsvillage.com/" + b.name + ".html\">NOW</a></td>");
-            index.println("</tr>\n");
-            
+            for (Map.Entry<String, Building> me: set) {
+
+                b = me.getValue();
+
+                if (b == null)
+                    continue;
+
+                index.println("<tr align=\"center\">");
+
+                index.println("<td width=\"100\">" + "#" + b.name + "</td>");
+                index.println("<td width=\"100\">" + b.address + "</td>");
+                index.println("<td width=\"100\">" + Integer.toString(b.length) +"x"+Integer.toString(b.width) + "x" + Integer.toString(b.height) + "</td>");
+                index.println("<td width=\"100\">" + "click for details");
+                index.println("<td width=\"100\">" + "$" + b.monthlyRate + "</td>");
+                index.println("<td width=\"100\">" + "<a href = \"http://www.bunnsvillage.com/" + b.name + ".html\">NOW</a></td>");
+                index.println("</tr>\n");
+
+            }
         }
         
         index.println("</tbody>\n </table>");
         
     }
-    
     
 }
