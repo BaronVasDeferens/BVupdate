@@ -85,6 +85,9 @@ public class WebUpdater {
         
     }
     
+    // Load and Add Content From File
+    // Accepts a filename of a TEXT FILE and adds all content found to 
+    // member PrintWriter "index"
     private void loadAndAddContentFromFile(String filename) {
         
         BufferedReader in = null;
@@ -113,7 +116,7 @@ public class WebUpdater {
     
     
     // UPDATE AVAILABLE MONTH
-    // Retruns <h3>AVAILABILITIES FOR MONTH 201X</h3>
+    // Returns <h3>AVAILABILITIES FOR MONTH 201X</h3>
     private String updateAvailableMonth() {
         String newTime = (LocalDateTime.now().getMonth() + " " +  LocalDateTime.now().getYear());
         String availMonth = "<h3>AVAILABILITIES FOR " + newTime + "</h3>\n";
