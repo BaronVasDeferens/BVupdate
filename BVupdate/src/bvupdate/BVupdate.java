@@ -51,10 +51,9 @@ public class BVupdate {
         System.out.println("Database load success...");
         
         
-        
-        
-        MapUpdater mapupdater = new MapUpdater(args);
+        MapUpdater mapupdater = new MapUpdater(connection, args);
         WebUpdater webupdater = new WebUpdater(mapupdater);
+        
         
         try {
             connection.close();

@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.imageio.ImageIO;
+import java.sql.*;
+
 
 /**
  *
@@ -28,10 +30,13 @@ public class MapUpdater {
     BufferedImage map = null;
     HashMap occupied;
     HashMap avails;
+    Connection connection;
     
     // UPDATER CONSTRUCTOR
     
-    public MapUpdater(String ... args) {
+    public MapUpdater(Connection connect, String ... args) {
+        
+        this.connection = connect;
         
         occupied = new <Integer, Building>HashMap();
         avails = new <Integer, Building>HashMap();
@@ -45,16 +50,100 @@ public class MapUpdater {
         
     }
     
+    // CREATE BUILDINGS
+    // Takes the ResultSet from the database query; 
+    // populates hashmap "occupied" using the data from resultset
+    private void createBuildings(ResultSet results) {
+        
+        try {
+            while (results.next()) {
+                String number, address, coords, ohdDescription, notes, temp;
+                int length, width, height, sqfeet, mandoors, restrooms, restrooms_ada, rate;
+                Boolean threePhase = false, hasAC = false;
+                Polygon poly;
+                Building b;
+
+                // Grab values from the results
+                number = results.getString("number");
+                address = results.getString("address");
+                coords = results.getString("coords");
+                length = results.getInt("length");
+                width = results.getInt("width");
+                height = results.getInt("height");
+                sqfeet = length * width;
+                mandoors = results.getInt("mandoors");
+                ohdDescription = results.getString("ohd_desc");
+                restrooms = results.getInt("restrooms");
+                restrooms_ada = results.getInt("restrooms_ada");
+                rate = results.getInt("rate");
+                notes = results.getString("notes");
+                
+                temp = results.getString("three_phase");
+                if (temp != null)
+                    if (temp.matches("yes"))
+                       threePhase = true;
+                
+                temp = results.getString("ac");
+                if (temp != null)
+                    if (temp.matches("yes"))
+                       hasAC = true;
+
+                
+                poly = new Polygon();
+                poly.reset();
+                
+                if (coords != null) {
+                // Extract coordinates from "coords"
+                    String coordsArray[] = coords.split(",", 8);
+                    for (int i = 0; i < 8; i+= 2) {
+                        poly.addPoint(Integer.parseInt(coordsArray[i]), Integer.parseInt(coordsArray[i+1]));
+                    }
+                }
+               
+                b = new Building(number,address, poly);
+                b.setDoors(mandoors, ohdDescription);
+                b.setOptions(threePhase, hasAC);
+                b.setRate(rate);
+                b.setRestrooms(restrooms, restrooms_ada);
+                b.setSize(length, width, height);
+                
+                occupied.put(number.hashCode(), b);
+
+            }
+        }
+        
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
+    
     // POPULATE HASHMAP
-    // Creates a total listing of the buildings and their positions within the image.
+    // Creates a total listing of the buildings, their attributes, and corresponding 
+    //positions within the image.
     private void populateHashmap() {
        
         Polygon poly;
         Building b;
+               
+        Statement state = null;
+        
+        try {
+            state = connection.createStatement();
+            ResultSet results = state.executeQuery("select * from buildings");
+            
+            if (results != null)
+                createBuildings(results);
+            
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         
         //Building  (String name, String address, LinkedList<String> features, 
         //          int length, int width, int monthlyRate, Polygon myPoly)
-        
+        /*
         // #27
         poly = new Polygon();
         poly.addPoint(175,108);
@@ -391,7 +480,7 @@ public class MapUpdater {
         b = new Building("1B","8083 NW Hwy 99",poly);
 
         occupied.put("1B".hashCode(), b);
-           
+        */   
     }
     
     
