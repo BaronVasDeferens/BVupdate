@@ -208,10 +208,15 @@ public class WebUpdater {
 
                 index.println("<tr align=\"center\">");
 
-                index.println("<td width=\"100\">" + "#" + b.name + "</td>");
+                index.println("<td width=\"100\">" + b.name + "</td>");
                 index.println("<td width=\"100\">" + b.address + "</td>");
                 index.println("<td width=\"100\">" + Integer.toString(b.length) +"x"+Integer.toString(b.width) + "x" + Integer.toString(b.height) + "</td>");
-                index.println("<td width=\"100\">" + "click for details");
+                
+                // Include a feature from the feature list (if any)
+                String feature = "click for details";
+                if (b.features.size() > 0)
+                    feature = b.features.peek();
+                index.println("<td width=\"100\">" + feature);
                 index.println("<td width=\"100\">" + "$" + b.monthlyRate + "</td>");
                 index.println("<td width=\"100\">" + "<a href = \"http://www.bunnsvillage.com/" + b.name + ".html\">NOW</a></td>");
                 index.println("</tr>\n");

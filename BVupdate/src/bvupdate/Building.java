@@ -31,6 +31,7 @@ public class Building {
         this.address = address;
         
         this.features = new LinkedList();
+        features.clear();
                 
         this.length = 0;
         this.width = 0;

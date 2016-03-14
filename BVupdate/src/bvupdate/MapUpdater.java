@@ -109,6 +109,15 @@ public class MapUpdater {
                 b.setRestrooms(restrooms, restrooms_ada);
                 b.setSize(length, width, height);
                 
+                // Chunk up the "notes" and add them as Building.features.
+                // Delineate by semicolon (up to max of 10 feature strings)
+                if (notes != null) {
+                    String featureArray[] = notes.split(";",10);
+                    for (int i = 0; i < featureArray.length; i++) {
+                        b.addFeature(featureArray[i]);
+                    }
+                }
+                
                 occupied.put(number.hashCode(), b);
 
             }
