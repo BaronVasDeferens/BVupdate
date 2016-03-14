@@ -58,7 +58,8 @@ public class WebUpdater {
         }
 
         catch (IOException e) {
-            System.out.println("FATAL ERROR: could not create index.html...");
+            System.out.println("ERROR: could not create index.html...");
+            return;
         }
 
         
@@ -88,7 +89,7 @@ public class WebUpdater {
     // Load and Add Content From File
     // Accepts a filename of a TEXT FILE and adds all content found to 
     // member PrintWriter "index"
-    private void loadAndAddContentFromFile(String filename) {
+    private boolean loadAndAddContentFromFile(String filename) {
         
         BufferedReader in = null;
         InputStream fileIn = null;
@@ -107,9 +108,12 @@ public class WebUpdater {
             // Close the undeed streams...
             in.close();
             fileIn.close();
+            
+            return (true);
         }
         catch (IOException e) {
             System.out.println(e.toString());
+            return (false);
         }
         
     }
@@ -185,8 +189,13 @@ public class WebUpdater {
         Set<Map.Entry<String, Building>> set = avails.entrySet();
         Building b;
         
-        loadAndAddContentFromFile("tablesetup.txt");
+        // Add the table information to the "index" PrintWriter
+        if (!loadAndAddContentFromFile("tablesetup.txt")) {
+            System.out.println("ERROR: tabelsetup.txt not found!");
+            return;
+        }
         
+        // For each available building in the "set", add attributes to the "avail table"
         if (set.size() > 0)
         {
         
@@ -209,7 +218,15 @@ public class WebUpdater {
 
             }
         }
+       
+        // No entries in the set means all buildings are occupied. Coney condolences.
+        else {
+            index.println("</tbody>\n </table>");
+            index.println("<h2>We're sorry, but there are currently no buildings available for lease.</h2>");
+            return;
+        }
         
+        // Close the table out 
         index.println("</tbody>\n </table>");
         
     }

@@ -14,6 +14,10 @@ The WebUpdater uses the data furnished by MapUpdater to generate a new website
  
 OUTPUT: index.html and map.png
 
+TODO: generate a new & updated version of each individual building web page
+TODO: load, modify, and save a new version of the application web page using the
+      updated data to populate the drop-down box
+
  */
 package bvupdate;
 
@@ -28,7 +32,7 @@ public class BVupdate {
         // If there were none, assume all building are set to occupied
         if (args.length <= 0) {
             System.out.println("MAP UPDATER:");
-            System.out.println("Did you mean to set ALL BUILDINGS TO OCCUPIED?");
+            System.out.println("Setting ALL BUILDINGS TO OCCUPIED");
         }
         
         
@@ -50,7 +54,9 @@ public class BVupdate {
         
         System.out.println("Database load success...");
         
-        
+        // Update the map and website
+        // TODO: also create individual website for building
+        // TODO: update application drop-down box to reflect availabilities
         MapUpdater mapupdater = new MapUpdater(connection, args);
         WebUpdater webupdater = new WebUpdater(mapupdater);
         

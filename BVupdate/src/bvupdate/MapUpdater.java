@@ -41,7 +41,7 @@ public class MapUpdater {
         occupied = new <Integer, Building>HashMap();
         avails = new <Integer, Building>HashMap();
         
-        populateHashmap();
+        populateHashmap(args);
         sortBuildings(args);
         
         map = loadMapImage();
@@ -100,6 +100,8 @@ public class MapUpdater {
                     }
                 }
                
+                // Construct new building objkect from db results
+                // and store it in the hash, indexed by it's unique "number" field
                 b = new Building(number,address, poly);
                 b.setDoors(mandoors, ohdDescription);
                 b.setOptions(threePhase, hasAC);
@@ -121,16 +123,32 @@ public class MapUpdater {
     // POPULATE HASHMAP
     // Creates a total listing of the buildings, their attributes, and corresponding 
     //positions within the image.
-    private void populateHashmap() {
+    private void populateHashmap(String ... args) {
        
         Polygon poly;
         Building b;
+        String queryString = "select * from buildings";
                
         Statement state = null;
         
+        // IF THE PROGRAM DID NOT REQUIRE ALL BUILDING DATA:
+        // Build the appropriate SQL query by finding all entries whose "number"
+        // attribute matches a String in "args."
+        // Example: if args.length is non-zero, the "where" keyword is appended
+
+//        if (args.length > 0) {
+//            queryString += (" where number = \"" + args[0] + "\"");
+//            int i;
+//            for (i = 1; i < args.length; i++) {
+//                queryString += (" OR number = \"" + args[i] + "\"");
+//            }
+//        }
+//        
+//        System.out.println(queryString);
+        
         try {
             state = connection.createStatement();
-            ResultSet results = state.executeQuery("select * from buildings");
+            ResultSet results = state.executeQuery(queryString);
             
             if (results != null)
                 createBuildings(results);
@@ -140,6 +158,9 @@ public class MapUpdater {
             e.printStackTrace();
         }
         
+        // THE FOLLOWING IS LEGACY CODE...
+        // ...left here for reference. All private information (e.g renatl rates) has been
+        // scrubbed.
         
         //Building  (String name, String address, LinkedList<String> features, 
         //          int length, int width, int monthlyRate, Polygon myPoly)
@@ -185,7 +206,7 @@ public class MapUpdater {
         
         // #24
         poly = new Polygon();
-        poly.addPoint(180,136);
+        poly.addPoint(180,136);insert into buildings values ("
         poly.addPoint(200,136);
         poly.addPoint(200,166);
         poly.addPoint(180,166);
@@ -275,7 +296,6 @@ public class MapUpdater {
         b.setRestrooms(1, 0);
         b.setOptions(true, false);
         b.setDoors(1, "two 10'x10'");
-        b.setRate(1550);
         occupied.put("18".hashCode(), b);
         
         // #17
@@ -466,7 +486,6 @@ public class MapUpdater {
         b = new Building("1A","8081 NW Hwy 99",poly);
         b.setSize(40, 48, 14);
         b.setRestrooms(1,1);
-        b.setRate(1450);
         b.setDoors(1, "two 12'x12' overhead doors");
         b.setOptions(true, true);
         occupied.put("1A".hashCode(), b);
@@ -522,9 +541,15 @@ public class MapUpdater {
         // a clickmap for the availabilities
         
         for (String bldg: args) {
-            System.out.println("removing " + bldg);
-            avails.put(bldg.hashCode(), occupied.get(bldg.hashCode()));
-            occupied.remove(bldg.hashCode());
+            System.out.print("removing " + bldg);
+            
+            if (!occupied.containsKey(bldg.hashCode()))
+                System.out.print("...NOT FOUND!\n");
+            else {
+                avails.put(bldg.hashCode(), occupied.get(bldg.hashCode()));
+                occupied.remove(bldg.hashCode());
+                System.out.print("...OK!\n");
+            }
         }
         
     }
