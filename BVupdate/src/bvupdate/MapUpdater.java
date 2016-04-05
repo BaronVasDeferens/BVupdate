@@ -166,7 +166,126 @@ public class MapUpdater {
         catch (Exception e) {
             e.printStackTrace();
         }
+           
+    }
+    
+    
+    // LOAD MAP IMAGE
+    // Loads the "blank" map
+    private BufferedImage loadMapImage() {
         
+        BufferedImage return_image = null;
+        InputStream fin = null;
+        
+        fin = getClass().getResourceAsStream("resources/blankmap.png");
+            
+        if (fin == null)
+        {
+            System.out.println("ERROR: Updater cannot create inputStream into blankmap.png!");
+            return null;
+        }
+       
+        try {
+            return_image = ImageIO.read(fin);
+        }
+        catch (IOException e)
+        {
+            System.out.println("ERROR: Updater cannot load blankmap.png!");
+            System.exit(1);
+        }
+        
+        return(return_image);
+    }
+    
+    
+    // SORT BUILDINGS
+    // Separates the occupied buildings and available buildings into two distinct
+    // hashmaps.
+    private void sortBuildings(String ... args) {
+        
+        // Remove all of the "occupied" buildings from the occupied map
+        // and store them in a seperate hash in order to later generate
+        // a clickmap for the availabilities
+        
+        for (String bldg: args) {
+            
+
+            System.out.print("removing " + bldg);
+            
+            if (!occupied.containsKey(bldg.hashCode()))
+                System.out.print("...NOT FOUND!\n");
+            else {
+                avails.put(bldg.hashCode(), occupied.get(bldg.hashCode()));
+                occupied.remove(bldg.hashCode());
+                System.out.print("...OK!\n");
+            }
+            
+            // In the event that user input is something like "3A 3B", the entry for "3"
+            // should be scrubbed
+            if (bldg.endsWith("A") || (bldg.endsWith("B"))) { 
+                
+                bldg = bldg.substring(0, (bldg.length() - 1));
+                System.out.print("...also removing " + bldg);
+                
+                if (occupied.containsKey(bldg.hashCode())) {
+                    occupied.remove(bldg.hashCode());
+                    System.out.println("...OK!");
+                }
+                else
+                    System.out.println("...NOT FOUND!");
+            }
+        }
+        
+    }
+    
+    // DRAW BUILDINGS
+    // Accepts the list of available buildings and draws them to the map
+    private void drawBuildings() {
+        
+        // Setup the graphics context
+        Graphics2D g2 = map.createGraphics();
+        g2.setComposite(AlphaComposite.SrcOver.derive(0.8f));
+        g2.setColor(new Color(180,80,0));
+        
+        // Begin drawing over the sequence of occupied buildings
+        Polygon p;
+        Set<Map.Entry<String, Building>> set = occupied.entrySet();
+
+        for (Map.Entry<String, Building> me: set) {
+            //System.out.println("drawing " + me.getKey());
+            p = (Polygon)me.getValue().myPoly;
+            g2.fillPolygon(p);
+        }     
+    }
+    
+    
+    // SAVE MAP
+    // Handles the out-to-disk duties, saving the new map as "map.png"
+    private void saveMap() {
+        
+        if (map == null) {
+            System.out.println("ERROR: saveMap(): map is null!");
+            return;
+        }
+        
+        RenderedImage renderedMap = (RenderedImage)map;
+        
+        try {
+            //OutputStream out = new FileOutputStream(new File("images/map.png"));
+            File out = new File("map.png");
+            ImageIO.write(renderedMap, "png", out);
+            System.out.println("SUCCESS!");
+        }
+        catch (IOException e) {
+            System.out.println("ERROR saveMap(): " + e.toString());
+        }
+        
+    }
+    
+    
+}
+
+
         // THE FOLLOWING IS LEGACY CODE...
         // ...left here for reference. All private information (e.g renatl rates) has been
         // scrubbed.
@@ -508,105 +627,4 @@ public class MapUpdater {
         b = new Building("1B","8083 NW Hwy 99",poly);
 
         occupied.put("1B".hashCode(), b);
-        */   
-    }
-    
-    
-    // LOAD MAP IMAGE
-    // Loads the "blank" map
-    private BufferedImage loadMapImage() {
-        
-        BufferedImage return_image = null;
-        InputStream fin = null;
-        
-        fin = getClass().getResourceAsStream("resources/blankmap.png");
-            
-        if (fin == null)
-        {
-            System.out.println("ERROR: Updater cannot create inputStream into blankmap.png!");
-            return null;
-        }
-       
-        try {
-            return_image = ImageIO.read(fin);
-        }
-        catch (IOException e)
-        {
-            System.out.println("ERROR: Updater cannot load blankmap.png!");
-            System.exit(1);
-        }
-        
-        return(return_image);
-    }
-    
-    
-    // SORT BUILDINGS
-    // Separates the occupied buildings and available buildings into two distinct
-    // hashmaps.
-    private void sortBuildings(String ... args) {
-        
-        // Remove all of the "occupied" buildings from the occupied map
-        // and store them in a seperate hash in order to later generate
-        // a clickmap for the availabilities
-        
-        for (String bldg: args) {
-            System.out.print("removing " + bldg);
-            
-            if (!occupied.containsKey(bldg.hashCode()))
-                System.out.print("...NOT FOUND!\n");
-            else {
-                avails.put(bldg.hashCode(), occupied.get(bldg.hashCode()));
-                occupied.remove(bldg.hashCode());
-                System.out.print("...OK!\n");
-            }
-        }
-        
-    }
-    
-    // DRAW BUILDINGS
-    // Accepts the list of available buildings and draws them to the map
-    private void drawBuildings() {
-        
-        // Setup the graphics context
-        Graphics2D g2 = map.createGraphics();
-        g2.setComposite(AlphaComposite.SrcOver.derive(0.8f));
-        g2.setColor(new Color(180,80,0));
-        
-        // Begin drawing over the sequence of occupied buildings
-        Polygon p;
-        Set<Map.Entry<String, Building>> set = occupied.entrySet();
-
-        for (Map.Entry<String, Building> me: set) {
-            //System.out.println("drawing " + me.getKey());
-            p = (Polygon)me.getValue().myPoly;
-            g2.fillPolygon(p);
-        }     
-    }
-    
-    
-    // SAVE MAP
-    // Handles the out-to-disk duties, saving the new map as "map.png"
-    private void saveMap() {
-        
-        if (map == null) {
-            System.out.println("ERROR: saveMap(): map is null!");
-            return;
-        }
-        
-        RenderedImage renderedMap = (RenderedImage)map;
-        
-        try {
-            //OutputStream out = new FileOutputStream(new File("images/map.png"));
-            File out = new File("map.png");
-            ImageIO.write(renderedMap, "png", out);
-            System.out.println("SUCCESS!");
-        }
-        catch (IOException e) {
-            System.out.println("ERROR saveMap(): " + e.toString());
-        }
-        
-    }
-    
-    
-}
-
+        */

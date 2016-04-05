@@ -191,7 +191,7 @@ public class WebUpdater {
         
         // Add the table information to the "index" PrintWriter
         if (!loadAndAddContentFromFile("tablesetup.txt")) {
-            System.out.println("ERROR: tabelsetup.txt not found!");
+            System.out.println("ERROR: tablesetup.txt not found!");
             return;
         }
         

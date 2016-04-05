@@ -7,6 +7,8 @@ availabilities map.
 USAGE: This tool is designed to take as arguments all AVAILABLE units in the
 following format: mapupdate 11 13 21A 17B
 
+NOTE: "3A 3B" will produce different results than just "3"
+
 All buildings NOT specified are considered to be OCCUPIED
 
 The MapUpdater is up first, generating the lists of occupied and available units.
