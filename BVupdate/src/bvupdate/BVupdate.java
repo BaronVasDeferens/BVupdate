@@ -32,44 +32,28 @@ public class BVupdate {
         
         // Check for arguments:
         // If there were none, assume all building are set to occupied
-        if (args.length <= 0) {
+        if (args.length == 0) {
             System.out.println("MAP UPDATER:");
             System.out.println("Setting ALL BUILDINGS TO OCCUPIED");
         }
         
+       
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:buildings.db");){
+            //Class.forName("org.sqlite.JDBC");
+
+            System.out.println("Database load success...");
         
-        // Establish connection to database: buildings.db
-        Connection connection = null;
-        
-        try {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:buildings.db");
+            // Update the map and website
+            // TODO: also create individual website for building
+            // TODO: update application drop-down box to reflect availabilities
+            MapUpdater mapupdater = new MapUpdater(connection, args);
+            WebUpdater webupdater = new WebUpdater(mapupdater);
+            
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        if (connection == null) {
-            System.out.println("FATAL ERROR: Failed to load database!");
-            System.exit(1);
-        }
-        
-        System.out.println("Database load success...");
-        
-        // Update the map and website
-        // TODO: also create individual website for building
-        // TODO: update application drop-down box to reflect availabilities
-        MapUpdater mapupdater = new MapUpdater(connection, args);
-        WebUpdater webupdater = new WebUpdater(mapupdater);
-        
-        
-        try {
-            connection.close();
-        }
-        catch (Exception e) {
-            System.out.println(e.toString());
-        }
-        
     }
     
 }
