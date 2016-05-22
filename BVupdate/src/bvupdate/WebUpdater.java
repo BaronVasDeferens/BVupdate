@@ -34,13 +34,11 @@ public class WebUpdater {
         
         // Basic checks to avoid disaster
         if (mapUpdate == null) {
-            System.out.println("ERROR WebUpdater(): MapUpdater object is null...");
-            System.exit(1);
+            throw new IllegalArgumentException("MapUpdate object is required!");
         }
         
         if (mapUpdate.avails == null) {
-            System.out.println("ERROR WebUpdater(): MapUpdater HashMap object is null...");
-            System.exit(1);
+            throw new IllegalArgumentException("MapUpdate.avails is required!");
         }
         
         avails = mapUpdate.avails;
@@ -91,30 +89,28 @@ public class WebUpdater {
     // member PrintWriter "index"
     private boolean loadAndAddContentFromFile(String filename) {
         
-        BufferedReader in = null;
-        InputStream fileIn = null;
+        //BufferedReader in = null;
+        //InputStream fileIn = null;
+        boolean returnVal = false;
         
-        try {
-            fileIn = getClass().getResourceAsStream("resources/" + filename);
-            in = new BufferedReader(new InputStreamReader(fileIn));
+        try (InputStream fileIn = getClass().getResourceAsStream("resources/" + filename);
+                BufferedReader in = new BufferedReader(new InputStreamReader(fileIn));) {
             
             String input = in.readLine();
             while (input != null) {
                 index.print(input);
                 index.print("\n");
                 input = in.readLine();
-            }
+            }     
+            returnVal = true;
             
-            // Close the undeed streams...
-            in.close();
-            fileIn.close();
-            
-            return (true);
         }
         catch (IOException e) {
             System.out.println(e.toString());
             return (false);
         }
+
+        return (returnVal);
         
     }
     
