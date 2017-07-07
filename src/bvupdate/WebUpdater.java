@@ -208,7 +208,12 @@ public class WebUpdater {
 
                 index.println("<td width=\"100\">" + b.name + "</td>");
                 index.println("<td width=\"100\">" + b.address + "</td>");
-                index.println("<td width=\"100\">" + Integer.toString(b.length) +"x"+Integer.toString(b.width) + "x" + Integer.toString(b.height) + "</td>");
+                index.print("<td width=\"100\">" + Integer.toString(b.length) +"x"+Integer.toString(b.width));
+
+                if (b.height > 0)
+                    index.println("x" + Integer.toString(b.height) + "</td>");
+                else
+                    index.println("</td>");
                 
                 // Include a feature from the feature list (if any)
                 String feature = "click for details";
