@@ -33,14 +33,12 @@ public class BVupdate {
     public static void main(String... args) {
 
         // Check for arguments:
-        // If there were none, assume all building are set to occupied
+        // If there were none, assume all building are set to occupiedBuildings
         if (args.length == 0) {
-            System.out.println("MAP UPDATER: ");
-            System.out.println("Setting ALL BUILDINGS TO OCCUPIED");
+            System.out.println("Setting ALL BUILDINGS TO OCCUPIED!");
         }
 
-
-        Connection connection = null;
+        Connection connection;
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -50,6 +48,7 @@ public class BVupdate {
             // Update the map and website
             // TODO: also create individual website for building
             // TODO: update application drop-down box to reflect availabilities
+
             MapUpdater mapupdater = new MapUpdater(connection, args);
             WebUpdater webupdater = new WebUpdater(mapupdater);
 
@@ -57,8 +56,6 @@ public class BVupdate {
 
         } catch (Exception e) {
             throw new RuntimeException(e.toString());
-        } finally {
-
         }
 
 

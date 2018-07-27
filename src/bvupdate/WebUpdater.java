@@ -12,8 +12,6 @@ In application.html:
     The dropdown list of available units is updated
  */
 
-import bvupdate.MapUpdater;
-
 import java.awt.Polygon;
 import java.time.*;
 import java.io.*;
@@ -39,11 +37,11 @@ public class WebUpdater {
             throw new IllegalArgumentException("MapUpdate object is required!");
         }
         
-        if (mapUpdate.avails == null) {
-            throw new IllegalArgumentException("MapUpdate.avails is required!");
+        if (mapUpdate.availableBuildings == null) {
+            throw new IllegalArgumentException("MapUpdate.availableBuildings is required!");
         }
         
-        avails = mapUpdate.avails;
+        avails = mapUpdate.availableBuildings;
         updateIndex();
     }
     
@@ -64,8 +62,8 @@ public class WebUpdater {
 
         
         // PART 1: Initial html transfer
-        // Transfer the all of part1.txt to the index file (up to the date)
-        loadAndAddContentFromFile("part1.txt");
+        // Transfer the all of part1.html to the index file (up to the date)
+        loadAndAddContentFromFile("part1.html");
         
         // Tack on the updated month...
         index.print("\n");
@@ -78,7 +76,7 @@ public class WebUpdater {
         generateAvailTable();
         
         // PART 4: Append the final bits of unchanging html
-        loadAndAddContentFromFile("part2.txt");
+        loadAndAddContentFromFile("part2.html");
         
         
         // Wrap it up, B!
@@ -142,7 +140,7 @@ public class WebUpdater {
         String coordString = "";
         
         // Iterate through the buildings. 
-        // If an erronious building is enetered, do not generater clickmap table entry for it
+        // If an erroneous building is entered, do not generate clickmap table entry for it
         for (Map.Entry<String, Building> me: set) {
 
             b = me.getValue();
@@ -180,7 +178,7 @@ public class WebUpdater {
     }
     
     
-    // GENRATE AVAIL TABLE
+    // GENERATE AVAIL TABLE
     // Using the remainder of the building data, create the table and feature list
     private void generateAvailTable() {
         
@@ -217,8 +215,11 @@ public class WebUpdater {
                 
                 // Include a feature from the feature list (if any)
                 String feature = "click for details";
+
                 if (b.features.size() > 0)
                     feature = b.features.peek();
+
+
                 index.println("<td width=\"100\">" + feature);
                 index.println("<td width=\"100\">" + "$" + b.monthlyRate + "</td>");
                 index.println("<td width=\"100\">" + "<a href = \"http://www.bunnsvillage.com/" + b.name + ".html\">NOW</a></td>");
@@ -227,10 +228,10 @@ public class WebUpdater {
             }
         }
        
-        // No entries in the set means all buildings are occupied. Coney condolences.
+        // No entries in the set means all buildings are occupiedBuildings. Coney condolences.
         else {
             index.println("</tbody>\n </table>");
-            index.println("<h2>We're sorry, but there are currently no buildings available for lease.</h2>");
+            index.println("<h2>We're sorry-- there are no buildings currently available for lease.</h2>");
             return;
         }
         

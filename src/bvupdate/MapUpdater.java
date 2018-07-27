@@ -28,8 +28,8 @@ import java.sql.SQLException;
 public class MapUpdater {
     
     BufferedImage map = null;
-    HashMap occupied;
-    HashMap avails;
+    HashMap occupiedBuildings;
+    HashMap availableBuildings;
     Connection connection;
     
     // UPDATER CONSTRUCTOR
@@ -38,8 +38,8 @@ public class MapUpdater {
         
         this.connection = connection;
         
-        occupied = new <Integer, Building>HashMap();
-        avails = new <Integer, Building>HashMap();
+        occupiedBuildings = new <Integer, Building>HashMap();
+        availableBuildings = new <Integer, Building>HashMap();
         
         populateHashmap(args);
         sortBuildings(args);
@@ -52,7 +52,7 @@ public class MapUpdater {
     
     // CREATE BUILDINGS
     // Takes the ResultSet from the database query; 
-    // populates hashmap "occupied" using the data from resultset
+    // populates hashmap "occupiedBuildings" using the data from resultset
     private void createBuildings(ResultSet results) {
         
         try {
@@ -100,7 +100,7 @@ public class MapUpdater {
                     }
                 }
                
-                // Construct new building objkect from db results
+                // Construct new building object from db results
                 // and store it in the hash, indexed by it's unique "number" field
                 b = new Building(number,address, poly);
                 b.setDoors(mandoors, ohdDescription);
@@ -118,7 +118,7 @@ public class MapUpdater {
                     }
                 }
                 
-                occupied.put(number.hashCode(), b);
+                occupiedBuildings.put(number.hashCode(), b);
 
             }
         }
@@ -131,7 +131,7 @@ public class MapUpdater {
     
     // POPULATE HASHMAP
     // Creates a total listing of the buildings, their attributes, and corresponding 
-    //positions within the image.
+    // positions within the image.
     private void populateHashmap(String ... args) {
        
         Polygon poly;
@@ -198,40 +198,37 @@ public class MapUpdater {
     
     
     // SORT BUILDINGS
-    // Separates the occupied buildings and available buildings into two distinct
+    // Separates the occupiedBuildings buildings and available buildings into two distinct
     // hashmaps.
     private void sortBuildings(String ... args) {
         
-        // Remove all of the "occupied" buildings from the occupied map
-        // and store them in a seperate hash in order to later generate
+        // Remove all of the "occupiedBuildings" buildings from the occupiedBuildings map
+        // and store them in a separate hash in order to later generate
         // a clickmap for the availabilities
         
         for (String bldg: args) {
-            
 
-            System.out.print("removing " + bldg);
-            
-            if (!occupied.containsKey(bldg.hashCode()))
-                System.out.print("...NOT FOUND!\n");
+            if (!occupiedBuildings.containsKey(bldg.hashCode()))
+                System.out.println(bldg + " NOT FOUND!\n");
             else {
-                avails.put(bldg.hashCode(), occupied.get(bldg.hashCode()));
-                occupied.remove(bldg.hashCode());
-                System.out.print("...OK!\n");
+                availableBuildings.put(bldg.hashCode(), occupiedBuildings.get(bldg.hashCode()));
+                occupiedBuildings.remove(bldg.hashCode());
+                System.out.println(bldg + " is set to AVAILABLE");
             }
-            
+
+            // FIXME when a bldg with both a whole AND an A/B is set to occupied, the draw routine draws double
+
             // In the event that user input is something like "3A 3B", the entry for "3"
-            // should be scrubbed
+            // should be ignored
             if (bldg.endsWith("A") || (bldg.endsWith("B"))) { 
                 
                 bldg = bldg.substring(0, (bldg.length() - 1));
-                System.out.print("...also removing " + bldg);
+                System.out.println("\tnot considering " + bldg);
                 
-                if (occupied.containsKey(bldg.hashCode())) {
-                    occupied.remove(bldg.hashCode());
-                    System.out.println("...OK!");
+                if (occupiedBuildings.containsKey(bldg.hashCode())) {
+                    occupiedBuildings.remove(bldg.hashCode());
                 }
-                else
-                    System.out.println("...NOT FOUND!");
+
             }
         }
         
@@ -246,9 +243,9 @@ public class MapUpdater {
         g2.setComposite(AlphaComposite.SrcOver.derive(0.8f));
         g2.setColor(new Color(180,80,0));
         
-        // Begin drawing over the sequence of occupied buildings
+        // Begin drawing over the sequence of occupiedBuildings buildings
         Polygon p;
-        Set<Map.Entry<String, Building>> set = occupied.entrySet();
+        Set<Map.Entry<String, Building>> set = occupiedBuildings.entrySet();
 
         for (Map.Entry<String, Building> me: set) {
             //System.out.println("drawing " + me.getKey());
