@@ -19,10 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- *
- * @author skot
- */
+
 public class WebUpdater {
     
     HashMap avails;

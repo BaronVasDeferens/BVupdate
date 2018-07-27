@@ -40,6 +40,8 @@ public class BVupdate {
 
         Connection connection;
 
+        // TODO all database stuff should go in this class, then pass lists of building to the other classes
+
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:buildings.db");
