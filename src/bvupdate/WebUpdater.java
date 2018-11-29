@@ -225,7 +225,7 @@ public class WebUpdater {
             }
         }
        
-        // No entries in the set means all buildings are occupiedBuildings. Coney condolences.
+        // No entries in the set means all buildings are occupiedBuildings. Convey condolences.
         else {
             index.println("</tbody>\n </table>");
             index.println("<h2>We're sorry-- there are no buildings currently available for lease.</h2>");
