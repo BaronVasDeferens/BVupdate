@@ -27,22 +27,24 @@ import java.sql.*;
 
 public class BVupdate {
 
-
     public static void main(String ... args) {
-        
-        // Check for arguments:
-        // If there were none, assume all building are set to occupied
         if (args.length == 0) {
+            // If there were no arguments, assume all building are set to occupied
             System.out.println("MAP UPDATER:");
             System.out.println("Setting ALL BUILDINGS TO OCCUPIED");
         }
-        
-       
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:buildings.db");){
-            //Class.forName("org.sqlite.JDBC");
 
-            System.out.println("Database load success...");
-        
+        new BVupdate(args);
+    }
+
+    private BVupdate(final String[] args) {
+
+        Connection connection = null;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite:buildings.db");
+
             // Update the map and website
             // TODO: also create individual website for building
             // TODO: update application drop-down box to reflect availabilities
@@ -52,9 +54,16 @@ public class BVupdate {
         }
         catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-
     }
-    
+
 }
 

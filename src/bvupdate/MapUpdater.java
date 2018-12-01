@@ -27,10 +27,10 @@ import java.sql.SQLException;
  */
 public class MapUpdater {
     
-    BufferedImage map = null;
-    HashMap occupiedBuildings;
-    HashMap availableBuildings;
-    Connection connection;
+    private BufferedImage map;
+    private HashMap occupiedBuildings;
+    private HashMap availableBuildings;
+    private Connection connection;
     
     // UPDATER CONSTRUCTOR
     
