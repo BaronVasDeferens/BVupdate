@@ -1,4 +1,0 @@
-AuthType Basic
-AuthName "occupied_bldgs"
-AuthUserFile "/home/bunns/.htpasswds/public_html/occupied_bldgs/passwd"
-require valid-user

@@ -1,0 +1,10 @@
+<table id="avail_table">
+<tbody>
+<tr>
+<th width="100"><b>Unit</b></th>
+<th width="100"><b>Address</b></th>
+<th width="100"><b>Size</b></th>
+<th width="100"><b>Features</b>
+</th><th width="100"><b>Rate</b></th>
+<th width="100"><b>Availability</b></th>
+</tr>

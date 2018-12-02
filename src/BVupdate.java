@@ -1,0 +1,71 @@
+/*
+ *
+Map Updater
+Allows for easy-update re-drawing of the ever-changing Bunns Village
+availabilities map.
+
+USAGE: This tool is designed to take as arguments all AVAILABLE units in the
+following format: mapupdate 11 13 21A 17B
+
+NOTE: "3A 3B" will produce different results than just "3"
+
+All buildings NOT specified are considered to be OCCUPIED
+
+The MapUpdater is up first, generating the lists of occupied and available units.
+The WebUpdater uses the data furnished by MapUpdater to generate a new website
+
+OUTPUT: index.html and map.png
+
+TODO: generate a new & updated version of each individual building web page
+TODO: load, modify, and save a new version of the application web page using the
+      // updated data to populate the drop-down box
+
+ */
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.Arrays;
+
+public class BVupdate {
+
+
+    public static void main(String ... args) {
+
+        // Check for arguments:
+        // If there were none, assume all building are set to occupiedBuildings
+        if (args.length == 0) {
+            System.out.println("Setting ALL BUILDINGS TO OCCUPIED!");
+        } else {
+            Arrays.stream(args).forEach(System.out::println);
+        }
+
+        // TODO: also create individual website for building
+        // TODO: update application drop-down box to reflect availabilities
+
+        Connection connection;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite:buildings.db");
+
+            BuildingMaster buildingMaster = new BuildingMaster(connection, args);
+
+            buildingMaster.getBuildings().values().forEach((b) -> {
+                if(!b.shouldDraw && !b.isOccupied)
+                    System.out.println(b.toString());
+            });
+
+            MapUpdater mapUpdater = new MapUpdater(buildingMaster.getBuildings());
+            mapUpdater.drawAndSaveMap();
+
+            connection.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.toString());
+        }
+
+
+    }
+
+}
+
