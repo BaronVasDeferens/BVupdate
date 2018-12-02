@@ -93,6 +93,7 @@ public class Building {
         x += this.isSubunit ? "SUBUNIT " : "";
         x += this.isOccupied ? "OCCUPIED " : "";
         x += this.shouldDraw ? "DRAW" : "";
+        x += " $" + this.monthlyRate;
 
         return x;
     }

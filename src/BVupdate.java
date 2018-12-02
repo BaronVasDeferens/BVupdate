@@ -49,16 +49,21 @@ public class BVupdate {
             connection = DriverManager.getConnection("jdbc:sqlite:buildings.db");
 
             BuildingMaster buildingMaster = new BuildingMaster(connection, args);
+            connection.close();
 
             buildingMaster.getBuildings().values().forEach((b) -> {
                 if(!b.shouldDraw && !b.isOccupied)
                     System.out.println(b.toString());
             });
 
+            // Craft the site
+            WebUpdater webUpdater = new WebUpdater(buildingMaster.getBuildings());
+
+            // Draw the map
             MapUpdater mapUpdater = new MapUpdater(buildingMaster.getBuildings());
             mapUpdater.drawAndSaveMap();
 
-            connection.close();
+
 
         } catch (Exception e) {
             throw new RuntimeException(e.toString());

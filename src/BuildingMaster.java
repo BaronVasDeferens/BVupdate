@@ -117,8 +117,6 @@ public class BuildingMaster {
 
                 // Occupancy test:
                 building.setIsOccupied(Arrays.stream(args).noneMatch((s) -> s.equalsIgnoreCase(building.name)));
-//                building.setShouldDraw(Arrays.stream(args).noneMatch((s) -> s.equalsIgnoreCase(building.name)));
-
                 allBldgs.put(building.name, building);
             }
         } catch (Exception e) {
