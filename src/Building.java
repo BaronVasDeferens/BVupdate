@@ -30,6 +30,14 @@ public class Building {
         features = new ArrayList<>();
     }
 
+    public String getMasterBuildingName() {
+        if (this.isSubunit) {
+            return name.substring(0, this.name.length() - 1);
+        } else {
+            return this.name;
+        }
+    }
+
     public void setAddress(final String address) {
         this.address = address;
     }

@@ -27,6 +27,8 @@ public class BuildingMaster {
 
     private HashMap<String, Building> readBuildingsFromDatabase(final String[] args) {
 
+        System.out.println("Reading buildings from db...");
+
         String queryString = "SELECT * FROM buildings";
         PreparedStatement statement = null;
         ResultSet results = null;
@@ -122,6 +124,8 @@ public class BuildingMaster {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println(allBldgs.size() + " units read");
 
         return allBldgs;
 

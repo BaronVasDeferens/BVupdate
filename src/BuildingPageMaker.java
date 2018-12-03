@@ -18,6 +18,7 @@ public class BuildingPageMaker {
             this.html = FileUtils.readFileToString(new File("src/resources/single_unit.html"), "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException("");
         }
 
         imageDir = new File("src/resources/images");
@@ -28,6 +29,8 @@ public class BuildingPageMaker {
     }
 
     public String createPage(final Building building) {
+
+        System.out.println("generating page for " + building.name + "...");
 
         String content = html;
 
@@ -75,10 +78,18 @@ public class BuildingPageMaker {
 
     private List<String> getImagesForBuildingNumber(final Building building) {
 
-        return Arrays.stream(Objects.requireNonNull(imageDir.listFiles()))
-                .filter(file -> file.getName().startsWith(building.name))
-                .map(File::getName)
-                .collect(Collectors.toList());
+        // TODO: return exterior picks of sub-units
+        if (building.isSubunit) {
+            return Arrays.stream(Objects.requireNonNull(imageDir.listFiles()))
+                    .filter(file -> file.getName().startsWith(building.name) || file.getName().startsWith(building.getMasterBuildingName()))
+                    .map(File::getName)
+                    .collect(Collectors.toList());
+        } else {
+            return Arrays.stream(Objects.requireNonNull(imageDir.listFiles()))
+                    .filter(file -> file.getName().startsWith(building.name))
+                    .map(File::getName)
+                    .collect(Collectors.toList());
+        }
 
     }
 

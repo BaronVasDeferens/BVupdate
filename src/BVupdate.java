@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class BVupdate {
 
@@ -55,23 +56,22 @@ public class BVupdate {
             BuildingMaster buildingMaster = new BuildingMaster(connection, args);
             connection.close();
 
-            buildingMaster.getBuildings().values().forEach((b) -> {
-                if (!b.shouldDraw && !b.isOccupied)
-                    System.out.println(b.toString());
-            });
+            final HashMap<String, Building> allBuildings = buildingMaster.getBuildings();
 
             // Craft the site
-            WebUpdater webUpdater = new WebUpdater(buildingMaster.getBuildings());
+            WebUpdater webUpdater = new WebUpdater(allBuildings);
 
             // Draw the map
-            MapUpdater mapUpdater = new MapUpdater(buildingMaster.getBuildings());
+            MapUpdater mapUpdater = new MapUpdater(allBuildings);
             mapUpdater.drawAndSaveMap();
 
             BuildingPageMaker buildingPageMaker = new BuildingPageMaker();
 
-            buildingMaster.getBuildings().values().forEach((building) -> {
-                if (!building.isOccupied) {
+            Arrays.stream(args).forEach( (bld) -> {
 
+                Building building = allBuildings.get(bld);
+
+                if (building != null) {
                     try {
                         FileUtils.write(new File(building.name + ".html"), buildingPageMaker.createPage(building));
                         System.out.println("Created " + building.name + ".html");

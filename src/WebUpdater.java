@@ -20,6 +20,8 @@ public class WebUpdater {
     // and carefully inserting new portions where appropriate
     private void updateIndex() {
 
+        System.out.println("Updating index.html...");
+
         PrintWriter index;
 
         // Open the various streams and file streams; fatal errors if any fail to open.
