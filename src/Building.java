@@ -10,8 +10,7 @@ public class Building {
     public boolean isOccupied = true;
     public boolean shouldDraw = true;
 
-
-    public ArrayList<String> features = new ArrayList<>();
+    public ArrayList<String> features;
     public String overheadDoors;
     public int length, width, height, sqFeet;
     public int numManDoors, numRestrooms, numADA;
@@ -28,6 +27,7 @@ public class Building {
         if (this.name.contains("A") || this.name.contains("B")) {
             this.isSubunit = true;
         }
+        features = new ArrayList<>();
     }
 
     public void setAddress(final String address) {
@@ -58,14 +58,30 @@ public class Building {
         this.sqFeet = length * width;
     }
 
+    public String getDimensions() {
+        return this.length + "x" + this.width + "x" + this.height;
+    }
+
+    public String getSquareFootage() {
+        return String.valueOf(this.length * this.width);
+    }
+
     public void setDoors(final int numManDoors, final String overheadDoors) {
         this.numManDoors = numManDoors;
         this.overheadDoors = overheadDoors;
     }
 
+    public String getManDoors() {
+        return String.valueOf(this.numManDoors);
+    }
+
     public void setRestrooms(final int numRestrooms, final int numADA) {
         this.numRestrooms = numRestrooms;
         this.numADA = numADA;
+    }
+
+    public String getRestrooms() {
+        return numRestrooms + " (" + this.numADA + " ADA access)";
     }
 
     public void setThreePhase(final String threePhase) {
@@ -74,14 +90,26 @@ public class Building {
         }
     }
 
+    public String hasThreePhase() {
+        return this.threePhase ? "YES" : "NO";
+    }
+
     public void setAirConditioning(final String ac) {
         if (ac.equalsIgnoreCase("yes")) {
             this.hasAC = true;
         }
     }
 
+    public String hasAirConditioning() {
+        return hasAC ? "YES" : "NO";
+    }
+
     public void setRate(final int monthlyRate) {
         this.monthlyRate = monthlyRate;
+    }
+
+    public String getMonthlyRate() {
+        return String.valueOf(this.monthlyRate);
     }
 
     public void addFeature(final String feature) {

@@ -22,6 +22,10 @@ TODO: load, modify, and save a new version of the application web page using the
 
  */
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Arrays;
@@ -63,6 +67,20 @@ public class BVupdate {
             MapUpdater mapUpdater = new MapUpdater(buildingMaster.getBuildings());
             mapUpdater.drawAndSaveMap();
 
+            BuildingPageMaker buildingPageMaker = new BuildingPageMaker();
+
+            buildingMaster.getBuildings().values().stream().forEach( (building) -> {
+                if (!building.isOccupied) {
+
+                    try {
+                        FileUtils.write(new File(building.name + ".html"), buildingPageMaker.createPage(building));
+                        System.out.println("Created " + building.name + ".html");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
 
 
         } catch (Exception e) {

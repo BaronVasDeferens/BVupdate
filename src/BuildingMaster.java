@@ -98,7 +98,7 @@ public class BuildingMaster {
                 // Chunk up the "notes" and add them as Building.features.
                 // Delineate by semicolon (up to max of 10 feature strings)
                 final String notes = results.getString("notes");
-                if (notes != null) {
+                if (notes != null && notes.length() > 0) {
                     String featureArray[] = notes.split(";", 10);
                     Arrays.stream(featureArray).forEach(building::addFeature);
                 }

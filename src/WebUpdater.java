@@ -11,7 +11,6 @@ public class WebUpdater {
     HashMap<String, Building> allBuildings;
 
     public WebUpdater(HashMap<String, Building> allBuildings) {
-
         this.allBuildings = allBuildings;
         updateIndex();
     }
@@ -31,7 +30,7 @@ public class WebUpdater {
             // Transfer the all of part1.html to the index file (up to the date)
             loadAndAddContentFromFile(index, "part1.html");
 
-            // Tack on the updated month...
+            // Updated month
             index.print("\n");
             index.print(updateAvailableMonth());
 
@@ -62,7 +61,7 @@ public class WebUpdater {
         boolean returnVal = false;
 
         try (InputStream fileIn = getClass().getResourceAsStream("resources/" + filename);
-             BufferedReader in = new BufferedReader(new InputStreamReader(fileIn));) {
+             BufferedReader in = new BufferedReader(new InputStreamReader(fileIn))) {
 
             String input = in.readLine();
             while (input != null) {
