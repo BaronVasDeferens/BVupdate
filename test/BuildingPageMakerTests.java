@@ -1,50 +1,47 @@
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BuildingPageMakerTests {
 
-    Building master;
+    Building building;
 
     @BeforeEach
     void setUp() {
-        master = new Building();
-        master.setName("14");
-        master.setAddress("1122 Boogie Boogie Ave.");
-        master.setSize(5,6,7);
-        master.setRestrooms(2,1);
-        master.setAirConditioning("yes");
-        master.setThreePhase("YES");
-        master.setDoors(2, "one 12x12");
-        master.setRate(1200);
-        master.setIsOccupied(false);
+        building = new Building();
+        building.setName("14");
+        building.setAddress("1122 Boogie Boogie Ave.");
+        building.setSize(5, 6, 7);
+        building.setRestrooms(2, 1);
+        building.setAirConditioning("yes");
+        building.setThreePhase("YES");
+        building.setDoors(2, "one 12x12");
+        building.setRate(1200);
+        building.setIsOccupied(false);
     }
 
     @Test
     void basicTest() {
         BuildingPageMaker buildingPageMaker = new BuildingPageMaker();
-        assertNotNull(buildingPageMaker.createPage(master));
+        assertNotNull(buildingPageMaker.createPage(building));
     }
 
     @Test
     void noFeaturesTest() {
         BuildingPageMaker buildingPageMaker = new BuildingPageMaker();
-        final String result = buildingPageMaker.createPage(master);
+        final String result = buildingPageMaker.createPage(building);
         assertFalse(result.contains("Features"));
 
     }
 
     @Test
     void withFeatures() {
-        master.addFeature("not a shit-hole");
-        master.addFeature("perfectly suitable for wife");
+        building.addFeature("not a shit-hole");
+        building.addFeature("perfectly suitable for wife");
 
         BuildingPageMaker buildingPageMaker = new BuildingPageMaker();
-        final String result = buildingPageMaker.createPage(master);
+        final String result = buildingPageMaker.createPage(building);
 
         assertTrue(result.contains("Features"));
     }

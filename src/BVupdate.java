@@ -33,7 +33,7 @@ import java.util.Arrays;
 public class BVupdate {
 
 
-    public static void main(String ... args) {
+    public static void main(String... args) {
 
         // Check for arguments:
         // If there were none, assume all building are set to occupiedBuildings
@@ -56,7 +56,7 @@ public class BVupdate {
             connection.close();
 
             buildingMaster.getBuildings().values().forEach((b) -> {
-                if(!b.shouldDraw && !b.isOccupied)
+                if (!b.shouldDraw && !b.isOccupied)
                     System.out.println(b.toString());
             });
 
@@ -69,7 +69,7 @@ public class BVupdate {
 
             BuildingPageMaker buildingPageMaker = new BuildingPageMaker();
 
-            buildingMaster.getBuildings().values().stream().forEach( (building) -> {
+            buildingMaster.getBuildings().values().forEach((building) -> {
                 if (!building.isOccupied) {
 
                     try {

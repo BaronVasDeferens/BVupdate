@@ -46,11 +46,11 @@ public class BuildingPageMaker {
         if (building.features.size() > 0) {
             String features =
                     "<tr>" +
-                    "   <td class=\"spec_col\">Features</td>" +
-                    "   <td class=\"spec_row\">" +
+                            "   <td class=\"spec_col\">Features</td>" +
+                            "   <td class=\"spec_row\">" +
                             "<ul>";
 
-            for (String feature: building.features) {
+            for (String feature : building.features) {
                 features += "<li>" + feature + "</li>";
             }
 
@@ -63,7 +63,7 @@ public class BuildingPageMaker {
 
         // Add images
         String addImages = "";
-        for (String imageName: getImagesForBuildingNumber(building)) {
+        for (String imageName : getImagesForBuildingNumber(building)) {
             addImages += "<img src=\"http://www.bunnsvillage.com/images/" + imageName + "\" class=\"picture\">";
         }
 
@@ -76,7 +76,7 @@ public class BuildingPageMaker {
     private List<String> getImagesForBuildingNumber(final Building building) {
 
         return Arrays.stream(Objects.requireNonNull(imageDir.listFiles()))
-                .filter( file -> file.getName().startsWith(building.name))
+                .filter(file -> file.getName().startsWith(building.name))
                 .map(File::getName)
                 .collect(Collectors.toList());
 
