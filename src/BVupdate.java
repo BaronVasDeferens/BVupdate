@@ -44,7 +44,6 @@ public class BVupdate {
             Arrays.stream(args).forEach(System.out::println);
         }
 
-        // TODO: also create individual website for building
         // TODO: update application drop-down box to reflect availabilities
 
         Connection connection;
