@@ -3,10 +3,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BuildingMaster {
 
@@ -29,7 +28,7 @@ public class BuildingMaster {
 
         System.out.println("Reading buildings from db...");
 
-        String queryString = "SELECT * FROM buildings";
+        String queryString = "SELECT * FROM buildings";     // FIX ME: bad practice
         PreparedStatement statement = null;
         ResultSet results = null;
 
@@ -126,63 +125,50 @@ public class BuildingMaster {
         }
 
         System.out.println(allBldgs.size() + " units read");
-
         return allBldgs;
 
     }
 
-    // Handle Half Building
+    // Handle Half Buildings
     // Set isOccupied on sub-units of occupied masters, and vice-versa
     // Determine whether a particular building should be drawn based on occupancy relationship
     void handleTransitiveOccupancy() {
 
-        Set<Building> alreadyProcessed = new HashSet<>();
+        final Set<Building> alreadyProcessed = new HashSet<>();
+        final List<Building> availableBuildings = allBuildings.values().stream().filter(bldg -> !bldg.isOccupied).collect(Collectors.toList());
+        final List<Building> occupiedBuildings = allBuildings.values().stream().filter(building -> building.isOccupied).collect(Collectors.toList());
 
-        // Pass one: Occupied "master" units: set sub-units to occupied
-        for (Building building : allBuildings.values()) {
+        availableBuildings.stream().forEach(bldg -> System.out.println("AVAILABLE: " + bldg.name));
 
-            if (building.isOccupied && !building.isSubunit) {
-
-                Building unitA = allBuildings.get(building.name + "A");
-                Building unitB = allBuildings.get(building.name + "B");
-
-                if (unitA != null) {
-                    unitA.setIsOccupied(true);
-                    unitA.setShouldDraw(false);
-                    alreadyProcessed.add(unitA);
-                }
-
-                if (unitB != null) {
-                    unitB.setIsOccupied(true);
-                    unitB.setShouldDraw(false);
-                    alreadyProcessed.add(unitB);
-                }
-
-                alreadyProcessed.add(building);
-                building.setShouldDraw(true);
-            }
-        }
-
-        // Pass two: occupied sub-units set their masters to occupied
-        for (Building building : allBuildings.values()) {
-
-            if (alreadyProcessed.contains(building)) {
-                continue;
-            }
-
-            // Occupied sub-units: set "master" units to occupied
-            if (building.isOccupied && building.isSubunit) {
-                final String masterName = building.name.substring(0, building.name.length() - 1);
-
-                Building master = allBuildings.get(masterName);
-                if (master != null) {
+        // Process available subunits
+        availableBuildings.stream()
+                .filter(building -> building.isSubunit)
+                .forEach(building -> {
+                    final Building master = allBuildings.get(building.getMasterBuildingName());
                     master.setIsOccupied(true);
                     master.setShouldDraw(false);
-                    building.setShouldDraw(true);
-                    System.out.println(building.name + " is occupied sub-unit of " + master.name);
-                }
-            }
-        }
+                    alreadyProcessed.add(master);
+                    alreadyProcessed.add(building);
+                });
+
+        // Process available masters
+        availableBuildings.stream()
+                .filter(bldg -> !alreadyProcessed.contains(bldg))
+                .filter(bldg -> !bldg.isSubunit)
+                .forEach(building -> {
+
+                    Building unitA = allBuildings.get(building.name + "A");
+                    unitA.setShouldDraw(false);
+                    unitA.setIsOccupied(true);
+                    Building unitB = allBuildings.get(building.name + "B");
+                    unitB.setShouldDraw(false);
+                    unitB.setIsOccupied(true);
+
+                    alreadyProcessed.add(unitA);
+                    alreadyProcessed.add(unitB);
+                    alreadyProcessed.add(building);
+                });
+
     }
 
     public HashMap<String, Building> getBuildings() {

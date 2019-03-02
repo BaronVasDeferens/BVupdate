@@ -37,7 +37,7 @@ class BuildingPageMakerTests {
 
     @Test
     void withFeatures() {
-        building.addFeature("not a shit-hole");
+        building.addFeature("condo");
         building.addFeature("perfectly suitable for wife");
 
         BuildingPageMaker buildingPageMaker = new BuildingPageMaker();

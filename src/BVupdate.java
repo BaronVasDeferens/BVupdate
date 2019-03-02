@@ -40,8 +40,6 @@ public class BVupdate {
         // If there were none, assume all building are set to occupiedBuildings
         if (args.length == 0) {
             System.out.println("Setting ALL BUILDINGS TO OCCUPIED!");
-        } else {
-            Arrays.stream(args).forEach(System.out::println);
         }
 
         // TODO: update application drop-down box to reflect availabilities

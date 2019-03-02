@@ -8,7 +8,7 @@ public class Building {
     public boolean isSubunit = false;
 
     public boolean isOccupied = true;
-    public boolean shouldDraw = true;
+    public boolean shouldDraw = false;
 
     public ArrayList<String> features;
     public String overheadDoors;
