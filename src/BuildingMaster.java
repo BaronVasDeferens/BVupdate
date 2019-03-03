@@ -12,6 +12,7 @@ public class BuildingMaster {
     private Connection connection;
 
     private HashMap<String, Building> allBuildings;
+    final List<Building> buildingsToRender = new ArrayList<>();
 
     public BuildingMaster(Connection connection, String[] args) {
         this.connection = connection;
@@ -125,7 +126,27 @@ public class BuildingMaster {
         }
 
         System.out.println(allBldgs.size() + " units read");
-        return allBldgs;
+
+        // Establish relationship between sub and masters
+        final HashMap<String, Building> relationalMap = new HashMap<>();
+        allBldgs.values().stream()
+                .filter(building -> !building.name.contains("A") || !building.name.contains("B"))
+                .forEach(building -> {
+                    final Building subUnitA = allBldgs.get(building.name + "A");
+                    if (subUnitA != null) {
+                        building.addSubunit(subUnitA);
+                    }
+
+                    final Building subUnitB = allBldgs.get(building.name + "B");
+                    if (subUnitA != null) {
+                        building.addSubunit(subUnitB);
+                    }
+
+                    relationalMap.put(building.name, building);
+                });
+
+
+        return relationalMap;
 
     }
 
@@ -135,43 +156,76 @@ public class BuildingMaster {
     void handleTransitiveOccupancy() {
 
         final Set<Building> alreadyProcessed = new HashSet<>();
-        final List<Building> availableBuildings = allBuildings.values().stream().filter(bldg -> !bldg.isOccupied).collect(Collectors.toList());
-        final List<Building> occupiedBuildings = allBuildings.values().stream().filter(building -> building.isOccupied).collect(Collectors.toList());
+        final List<Building> availableBuildings = allBuildings.values().stream()
+                .filter(bldg -> !bldg.isOccupied)
+                .collect(Collectors.toList());
 
-        availableBuildings.stream().forEach(bldg -> System.out.println("AVAILABLE: " + bldg.name));
+        availableBuildings.forEach(bldg -> System.out.println("AVAILABLE: " + bldg.name));
 
-        // Process available subunits
-        availableBuildings.stream()
-                .filter(building -> building.isSubunit)
-                .forEach(building -> {
-                    final Building master = allBuildings.get(building.getMasterBuildingName());
-                    master.setIsOccupied(true);
-                    master.setShouldDraw(false);
-                    alreadyProcessed.add(master);
-                    alreadyProcessed.add(building);
-                });
+        for (final Building building : availableBuildings) {
 
-        // Process available masters
-        availableBuildings.stream()
-                .filter(bldg -> !alreadyProcessed.contains(bldg))
-                .filter(bldg -> !bldg.isSubunit)
-                .forEach(building -> {
+            if (alreadyProcessed.contains(building)) {
+                continue;
+            }
 
-                    Building unitA = allBuildings.get(building.name + "A");
-                    unitA.setShouldDraw(false);
-                    unitA.setIsOccupied(true);
-                    Building unitB = allBuildings.get(building.name + "B");
-                    unitB.setShouldDraw(false);
-                    unitB.setIsOccupied(true);
+            // Available subunit
+            if (building.isSubunit()) {
+                final Building masterUnit = allBuildings.get(building.getMasterBuildingName());
+                if (masterUnit != null) {
+                    alreadyProcessed.add(masterUnit);
+                }
+                building.setShouldDraw(false);
+            } else {
+                // Available master
+                building.setShouldDraw(false);
+                for (final Building subUnit : building.getSubunits()) {
+                    subUnit.setShouldDraw(false);
+                    subUnit.setIsOccupied(true);
+                    alreadyProcessed.add(subUnit);
+                }
+            }
+            buildingsToRender.add(building);
+            alreadyProcessed.add(building);
+        }
 
-                    alreadyProcessed.add(unitA);
-                    alreadyProcessed.add(unitB);
-                    alreadyProcessed.add(building);
-                });
 
+        for (final Building building : allBuildings.values()) {
+
+            if (!building.isOccupied || alreadyProcessed.contains(building)) {
+                continue;
+            }
+
+            // Occupied subunit
+            if (building.isSubunit()) {
+                final Building masterUnit = allBuildings.get(building.getMasterBuildingName());
+                if (masterUnit != null) {
+                    masterUnit.setShouldDraw(true);
+                    alreadyProcessed.add(masterUnit);
+                }
+                building.setShouldDraw(false);
+            } else {
+                // Occupied master
+                building.setShouldDraw(true);
+                for (final Building subUnit : building.getSubunits()) {
+                    subUnit.setShouldDraw(false);
+                    subUnit.setIsOccupied(true);
+                    alreadyProcessed.add(subUnit);
+                }
+            }
+            buildingsToRender.add(building);
+            alreadyProcessed.add(building);
+        }
     }
 
-    public HashMap<String, Building> getBuildings() {
-        return this.allBuildings;
+    /**
+     * Returns a list of processed buildings; if only one sub-unit of a given building is available, the whole will not
+     * appear in the list.
+     *
+     * @return
+     */
+    public Map<String, Building> getBuildings() {
+        final Map<String, Building> buildingMap = new HashMap<>();
+        buildingsToRender.forEach(building -> buildingMap.put(building.name, building));
+        return buildingMap;
     }
 }

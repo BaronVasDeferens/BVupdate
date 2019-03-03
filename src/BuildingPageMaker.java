@@ -30,8 +30,6 @@ public class BuildingPageMaker {
 
     public String createPage(final Building building) {
 
-        System.out.println("generating page for " + building.name + "...");
-
         String content = html;
 
         content = content.replace("%%unitName%%", building.name);
@@ -79,7 +77,7 @@ public class BuildingPageMaker {
     private List<String> getImagesForBuildingNumber(final Building building) {
 
         // TODO: return exterior picks of sub-units
-        if (building.isSubunit) {
+        if (building.isSubunit()) {
             return Arrays.stream(Objects.requireNonNull(imageDir.listFiles()))
                     .filter(file -> file.getName().startsWith(building.name) || file.getName().startsWith(building.getMasterBuildingName()))
                     .map(File::getName)

@@ -1,16 +1,15 @@
-import java.awt.Polygon;
-import java.time.*;
+import java.awt.*;
 import java.io.*;
-import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Set;
 
 
 public class WebUpdater {
 
-    HashMap<String, Building> allBuildings;
+    Map<String, Building> allBuildings;
 
-    public WebUpdater(HashMap<String, Building> allBuildings) {
+    public WebUpdater(Map<String, Building> allBuildings) {
         this.allBuildings = allBuildings;
         updateIndex();
     }
@@ -26,7 +25,7 @@ public class WebUpdater {
 
         // Open the various streams and file streams; fatal errors if any fail to open.
         try {
-            index = new PrintWriter("index.html", "UTF-8");
+            index = new PrintWriter("index.html", StandardCharsets.UTF_8);
 
             // PART 1: Initial html transfer
             // Transfer the all of part1.html to the index file (up to the date)
@@ -104,7 +103,7 @@ public class WebUpdater {
 
         // Iterate through the buildings.
         // If an erroneous building is entered, do not generate clickmap table entry for it
-        for (Building b: allBuildings.values()) {
+        for (Building b : allBuildings.values()) {
 
             if (b.isOccupied)
                 continue;
@@ -114,8 +113,8 @@ public class WebUpdater {
             if (p == null)
                 continue;
 
-            int xVals [] = p.xpoints;
-            int yVals [] = p.ypoints;
+            int xVals[] = p.xpoints;
+            int yVals[] = p.ypoints;
 
             index.write("<area shape=\"poly\" coords=\"");
 
@@ -129,7 +128,7 @@ public class WebUpdater {
 
             // Append the new string to the index file
             index.write(coordString);
-            index.write("\" href=\"http://www.bunnsvillage.com/" +b.name + ".html\" alt=\"#" + b.name + "\">\n");
+            index.write("\" href=\"http://www.bunnsvillage.com/" + b.name + ".html\" alt=\"#" + b.name + "\">\n");
             coordString = "";
 
         }
@@ -152,7 +151,7 @@ public class WebUpdater {
         }
 
 
-        if (allBuildings.values().stream().allMatch( (b) -> b.isOccupied)) {
+        if (allBuildings.values().stream().allMatch((b) -> b.isOccupied)) {
             index.println("</tbody>\n </table>");
             index.println("<h2>We're sorry-- there are no buildings currently available for lease.</h2>");
             return;

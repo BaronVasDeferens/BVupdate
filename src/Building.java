@@ -1,14 +1,19 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 
 public class Building {
 
     public String name;
     public String address;
-    public boolean isSubunit = false;
 
+    private final Set<Building> subunits;
+
+    // By default buildings are occupied and should draw on the map
     public boolean isOccupied = true;
-    public boolean shouldDraw = false;
+    public boolean shouldDraw = true;
 
     public ArrayList<String> features;
     public String overheadDoors;
@@ -20,22 +25,17 @@ public class Building {
 
 
     public Building() {
+        subunits = new HashSet<>();
+        features = new ArrayList<>();
     }
 
     public void setName(final String name) {
         this.name = name;
-        if (this.name.contains("A") || this.name.contains("B")) {
-            this.isSubunit = true;
-        }
-        features = new ArrayList<>();
     }
 
     public String getMasterBuildingName() {
-        if (this.isSubunit) {
-            return name.substring(0, this.name.length() - 1);
-        } else {
-            return this.name;
-        }
+        if (!isSubunit()) return "";
+        return name.substring(0, name.length() - 1);
     }
 
     public void setAddress(final String address) {
@@ -44,11 +44,14 @@ public class Building {
 
     public void setIsOccupied(final boolean isOccupied) {
         this.isOccupied = isOccupied;
-        this.shouldDraw = isOccupied;
     }
 
     public void setShouldDraw(final boolean shouldDraw) {
         this.shouldDraw = shouldDraw;
+    }
+
+    public boolean isSubunit() {
+        return !subunits.isEmpty();
     }
 
     public void setPolygon(final Polygon polygon) {
@@ -124,11 +127,19 @@ public class Building {
         features.add(feature);
     }
 
+    public void addSubunit(final Building sub) {
+        subunits.add(sub);
+    }
+
+    public Set<Building> getSubunits() {
+        return subunits;
+    }
+
     public String toString() {
         String x = "NAME: " + this.name + " (" + this.address + ") ";
-        x += this.isSubunit ? "SUBUNIT " : "";
-        x += this.isOccupied ? "OCCUPIED " : "";
-        x += this.shouldDraw ? "DRAW" : "";
+        x += this.isSubunit() ? "SUBUNIT " : "MASTER ";
+        x += this.isOccupied ? "OCCUPIED " : "AVAILABLE ";
+        x += this.shouldDraw ? "DRAW " : "";
         x += " $" + this.monthlyRate;
 
         return x;

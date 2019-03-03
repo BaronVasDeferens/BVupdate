@@ -16,9 +16,9 @@ import java.sql.SQLException;
 class MapUpdater {
 
     private final Color occupiedColor = new Color(180, 80, 0);
-    private HashMap<String, Building> allBuildings;
+    private Map<String, Building> allBuildings;
 
-    MapUpdater(HashMap<String, Building> allBuildings) {
+    MapUpdater(Map<String, Building> allBuildings) {
         this.allBuildings = allBuildings;
     }
 
@@ -47,7 +47,7 @@ class MapUpdater {
 
     // DRAW BUILDINGS
     // Accepts the list of available buildings and draws them to the map
-    private void drawBuildings(final HashMap<String, Building> allBuildings, BufferedImage map) {
+    private void drawBuildings(final Map<String, Building> allBuildings, BufferedImage map) {
 
         // Setup the graphics context
         Graphics2D g2 = map.createGraphics();

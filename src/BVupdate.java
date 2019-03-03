@@ -30,6 +30,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 public class BVupdate {
 
@@ -53,7 +54,7 @@ public class BVupdate {
             BuildingMaster buildingMaster = new BuildingMaster(connection, args);
             connection.close();
 
-            final HashMap<String, Building> allBuildings = buildingMaster.getBuildings();
+            final Map<String, Building> allBuildings = buildingMaster.getBuildings();
 
             // Craft the site
             WebUpdater webUpdater = new WebUpdater(allBuildings);
