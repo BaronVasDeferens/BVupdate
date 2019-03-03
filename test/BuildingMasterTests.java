@@ -9,6 +9,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class BuildingMasterTests {
 
     @Test
+    @DisplayName("Building without subunits should report as subunit")
+    void subUnitTest() {
+        final Building building = new Building();
+        building.setName("10");
+        assertFalse(building.isSubunit());
+    }
+
+    @Test
     @DisplayName("sub-units of an occupied master units should not render")
     public void occupiedMasterTest() {
 
@@ -66,15 +74,9 @@ class BuildingMasterTests {
 
         final Map<String,Building> buildings = buildingMaster.getBuildings();
 
-        assertEquals(2, buildings.values().size());
+        assertEquals(3, buildings.values().size());
         assertFalse(buildings.get(subUnitB.name).shouldDraw);
         assertTrue(buildings.get(subUnitA.name).shouldDraw);
-    }
-
-    @Test
-    @DisplayName("derp")
-    void derp() {
-
     }
 
 }
