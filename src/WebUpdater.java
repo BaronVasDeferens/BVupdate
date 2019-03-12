@@ -2,7 +2,10 @@ import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class WebUpdater {
@@ -157,11 +160,14 @@ public class WebUpdater {
             return;
         }
 
-        // For each available building, add attributes to the "avail table"
-        for (Building b : allBuildings.values()) {
 
-            if (b.isOccupied)
-                continue;
+        // For each available building, add attributes to the "avail table"
+        final List<Building> sortedBuildings = allBuildings.values().stream()
+                .filter(building -> !building.isOccupied)
+                .sorted(Comparator.comparing(a -> a.name))
+                .collect(Collectors.toList());
+
+        for (Building b : sortedBuildings) {
 
             index.println("<tr align=\"center\">");
 
@@ -175,7 +181,7 @@ public class WebUpdater {
                 index.println("</td>");
 
             // Include a feature from the feature list (if any)
-            String feature = "click for details";
+            String feature = "";
 
             if (b.features.size() > 0)
                 feature = b.features.get(0);
