@@ -164,7 +164,7 @@ public class WebUpdater {
         // For each available building, add attributes to the "avail table"
         final List<Building> sortedBuildings = allBuildings.values().stream()
                 .filter(building -> !building.isOccupied)
-                .sorted(Comparator.comparing(a -> a.name))
+                .sorted()
                 .collect(Collectors.toList());
 
         for (Building b : sortedBuildings) {

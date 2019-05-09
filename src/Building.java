@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class Building {
+public class Building implements Comparable {
 
     public String name;
     public String address;
@@ -135,6 +135,22 @@ public class Building {
         return subunits;
     }
 
+    public int comparedTo(final Building compareAgainst) {
+        final String modifiedName = this.name.replace("A", "").replace("B", "");
+        final String comparedAgainstName = compareAgainst.name.replace("A", "").replace("B", "");
+
+        try {
+            final int myName = Integer.valueOf(modifiedName);
+            final int yourName = Integer.valueOf(comparedAgainstName);
+            if (myName > yourName)  return -1;
+            else if (myName < yourName) return 1;
+            else return 0;
+        } catch (final Exception e) {
+            System.out.println(e.toString());
+            return 0;
+        }
+    }
+
     public String toString() {
         String x = "NAME: " + this.name + " (" + this.address + ") ";
         x += this.isSubunit() ? "SUBUNIT " : "MASTER ";
@@ -145,4 +161,14 @@ public class Building {
         return x;
     }
 
+    @Override
+    public int compareTo(Object o) {
+        try {
+            final Building b = (Building) o;
+            return b.comparedTo(this);
+        } catch (final Exception e) {
+            System.out.println(e.toString());
+            return 0;
+        }
+    }
 }
