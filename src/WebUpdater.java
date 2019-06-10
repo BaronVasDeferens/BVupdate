@@ -2,7 +2,6 @@ import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,9 +9,9 @@ import java.util.stream.Collectors;
 
 public class WebUpdater {
 
-    Map<String, Building> allBuildings;
+    private Map<String, Building> allBuildings;
 
-    public WebUpdater(Map<String, Building> allBuildings) {
+    WebUpdater(Map<String, Building> allBuildings) {
         this.allBuildings = allBuildings;
         updateIndex();
     }
@@ -62,8 +61,6 @@ public class WebUpdater {
     // member PrintWriter "index"
     private boolean loadAndAddContentFromFile(PrintWriter index, String filename) {
 
-        boolean returnVal = false;
-
         try (InputStream fileIn = getClass().getResourceAsStream("resources/" + filename);
              BufferedReader in = new BufferedReader(new InputStreamReader(fileIn))) {
 
@@ -73,14 +70,12 @@ public class WebUpdater {
                 index.print("\n");
                 input = in.readLine();
             }
-            returnVal = true;
+            return true;
 
         } catch (IOException e) {
             System.out.println(e.toString());
-            return (false);
+            return false;
         }
-
-        return (returnVal);
 
     }
 
