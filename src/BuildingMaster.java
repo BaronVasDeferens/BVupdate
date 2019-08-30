@@ -75,6 +75,8 @@ public class BuildingMaster {
 
         HashMap<String, Building> allBldgs = new HashMap<>();
 
+        final HashSet<Building> rawBuildings = new HashSet<>();
+
         try {
             while (results.next()) {
 
@@ -101,7 +103,7 @@ public class BuildingMaster {
                 // Delineate by semicolon (up to max of 10 feature strings)
                 final String notes = results.getString("notes");
                 if (notes != null && notes.length() > 0) {
-                    String featureArray[] = notes.split(";", 10);
+                    String[] featureArray = notes.split(";", 10);
                     Arrays.stream(featureArray).forEach(building::addFeature);
                 }
 
@@ -110,7 +112,7 @@ public class BuildingMaster {
                 Polygon poly = new Polygon();
                 if (coords != null) {
                     // Extract coordinates from "coords" column
-                    String coordsArray[] = coords.split(",", 8);
+                    String[] coordsArray = coords.split(",", 8);
                     for (int i = 0; i < 8; i += 2) {
                         poly.addPoint(Integer.parseInt(coordsArray[i]), Integer.parseInt(coordsArray[i + 1]));
                     }
@@ -120,17 +122,19 @@ public class BuildingMaster {
                 // Occupancy test:
                 building.setIsOccupied(Arrays.stream(args).noneMatch((s) -> s.equalsIgnoreCase(building.name)));
                 allBldgs.put(building.name, building);
+                rawBuildings.add(building);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        System.out.println(allBldgs.size() + " units read");
+        System.out.println(rawBuildings.size() + " units read");
+        rawBuildings.forEach(building -> System.out.println(building.toString()));
 
         // Establish relationship between sub and masters
         final HashMap<String, Building> relationalMap = new HashMap<>();
-        allBldgs.values().stream()
-                .filter(building -> !building.name.contains("A") || !building.name.contains("B"))
+        rawBuildings.stream()
+                .filter(building -> !building.isSubunit())
                 .forEach(building -> {
                     final Building subUnitA = allBldgs.get(building.name + "A");
                     if (subUnitA != null) {
@@ -157,12 +161,12 @@ public class BuildingMaster {
 
         final Set<Building> alreadyProcessed = new HashSet<>();
         final List<Building> availableBuildings = allBuildings.values().stream()
-                .filter(bldg -> !bldg.isOccupied)
+                .filter(bldg -> !bldg.getIsOccupied())
                 .collect(Collectors.toList());
 
-        availableBuildings.forEach(bldg -> System.out.println("AVAILABLE: " + bldg.name));
-
         for (final Building building : availableBuildings) {
+
+            System.out.println("AVAILABLE: " + building.name);
 
             if (alreadyProcessed.contains(building)) {
                 continue;
@@ -191,7 +195,7 @@ public class BuildingMaster {
 
         for (final Building building : allBuildings.values()) {
 
-            if (!building.isOccupied || alreadyProcessed.contains(building)) {
+            if (!building.getIsOccupied() || alreadyProcessed.contains(building)) {
                 continue;
             }
 
@@ -227,5 +231,10 @@ public class BuildingMaster {
         final Map<String, Building> buildingMap = new HashMap<>();
         buildingsToRender.forEach(building -> buildingMap.put(building.name, building));
         return buildingMap;
+    }
+
+    // FOR TESTS
+    public HashMap<String, Building> getAllBuildings() {
+        return allBuildings;
     }
 }

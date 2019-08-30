@@ -9,12 +9,66 @@ import static org.junit.jupiter.api.Assertions.*;
 class BuildingMasterTests {
 
     @Test
-    @DisplayName("Building without subunits should report as subunit")
+    @DisplayName("Building without subunits should not report as subunit")
     void subUnitTest() {
         final Building building = new Building();
         building.setName("10");
         assertFalse(building.isSubunit());
+        assertEquals(building.getSubunits().size(), 0);
     }
+
+    @Test
+    @DisplayName("unoccupied building without sub-units should render as a single building")
+    void legacyTest() {
+        final Building b = new Building();
+        b.setName("2");
+        b.setIsOccupied(false);
+
+        final HashMap<String, Building> allBuildings = new HashMap<>();
+        allBuildings.put(b.name, b);
+        BuildingMaster buildingMaster = new BuildingMaster(allBuildings);
+        buildingMaster.handleTransitiveOccupancy();
+
+        assertEquals(buildingMaster.getBuildings().size(), 1);
+    }
+
+    @Test
+    @DisplayName("WTF is going on")
+    void errorCaseTest() {
+
+        final HashMap<String, Building> allBuildings = new HashMap<>();
+
+        final Building b1 = new Building();
+        b1.setName("1");
+//        b1.setIsOccupied(true);
+        allBuildings.put(b1.name, b1);
+
+        final Building b2 = new Building();
+        b2.setName("10");
+        allBuildings.put(b2.name, b2);
+
+//        final Building b2a = new Building();
+//        b2a.setName("11A");
+//        b2a.setIsOccupied(false);
+//
+//        final Building b2b = new Building();
+//        b2b.setName("11B");
+//        b2b.setIsOccupied(true);
+//
+//        b2.addSubunit(b2a);
+//        b2.addSubunit(b2b);
+//
+//
+//        allBuildings.put(b2a.name, b2a);
+//        allBuildings.put(b2b.name, b2b);
+
+        BuildingMaster buildingMaster = new BuildingMaster(allBuildings);
+        buildingMaster.handleTransitiveOccupancy();
+
+        assertEquals(buildingMaster.getBuildings().size(), buildingMaster.getAllBuildings().size());
+
+    }
+
 
     @Test
     @DisplayName("sub-units of an occupied master units should not render")
@@ -42,7 +96,7 @@ class BuildingMasterTests {
 
         final Map<String,Building> buildings = buildingMaster.getBuildings();
 
-        assertFalse(buildings.get(master.name).isOccupied);
+        assertFalse(buildings.get(master.name).getIsOccupied());
         assertFalse(buildings.get(master.name).shouldDraw);
 
         assertEquals(3, buildings.values().size());

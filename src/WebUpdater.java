@@ -103,7 +103,7 @@ public class WebUpdater {
         // If an erroneous building is entered, do not generate clickmap table entry for it
         for (Building b : allBuildings.values()) {
 
-            if (b.isOccupied)
+            if (b.getIsOccupied())
                 continue;
 
             // Extract a polygon and it's list posy x and y points
@@ -149,7 +149,7 @@ public class WebUpdater {
         }
 
 
-        if (allBuildings.values().stream().allMatch((b) -> b.isOccupied)) {
+        if (allBuildings.values().stream().allMatch(Building::getIsOccupied)) {
             index.println("</tbody>\n </table>");
             index.println("<h2>We're sorry-- there are no buildings currently available for lease.</h2>");
             return;
@@ -158,7 +158,7 @@ public class WebUpdater {
 
         // For each available building, add attributes to the "avail table"
         final List<Building> sortedBuildings = allBuildings.values().stream()
-                .filter(building -> !building.isOccupied)
+                .filter(building -> !building.getIsOccupied())
                 .sorted()
                 .collect(Collectors.toList());
 

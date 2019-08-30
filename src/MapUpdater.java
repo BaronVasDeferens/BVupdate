@@ -34,7 +34,7 @@ class MapUpdater {
 
         BufferedImage return_image = null;
 
-        try (InputStream fin = getClass().getResourceAsStream("resources/blankmap.png");) {
+        try (InputStream fin = getClass().getResourceAsStream("resources/blankmap.png")) {
             return_image = ImageIO.read(fin);
         } catch (IOException e) {
             e.printStackTrace();

@@ -12,7 +12,7 @@ public class Building implements Comparable {
     private final Set<Building> subunits;
 
     // By default buildings are occupied and should draw on the map
-    public boolean isOccupied = true;
+    private boolean isOccupied = true;
     public boolean shouldDraw = true;
 
     public ArrayList<String> features;
@@ -35,7 +35,7 @@ public class Building implements Comparable {
 
     public String getMasterBuildingName() {
         if (!isSubunit()) return "";
-        return name.substring(0, name.length() - 1);
+        return name.replace("A", "").replace("B", "");
     }
 
     public void setAddress(final String address) {
@@ -46,12 +46,15 @@ public class Building implements Comparable {
         this.isOccupied = isOccupied;
     }
 
+    public boolean getIsOccupied() { return isOccupied; }
+
     public void setShouldDraw(final boolean shouldDraw) {
         this.shouldDraw = shouldDraw;
+        // System.out.println(name + " should DRAW: " + shouldDraw);
     }
 
     public boolean isSubunit() {
-        return !subunits.isEmpty();
+        return !subunits.isEmpty() && !name.contains("A") && !name.contains("B");
     }
 
     public void setPolygon(final Polygon polygon) {
