@@ -28,8 +28,7 @@ public class BuildingMaster {
     private HashMap<String, Building> readBuildingsFromDatabase(final String[] args) {
 
         System.out.println("Reading buildings from db...");
-
-        String queryString = "SELECT * FROM buildings";     // FIX ME: bad practice
+        String queryString = "SELECT * FROM buildings";     // FIXME: bad practice
         PreparedStatement statement = null;
         ResultSet results = null;
 
